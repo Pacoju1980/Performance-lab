@@ -1,73 +1,86 @@
-PERFORMANCE LAB v1.2.0 — AUDITORÍA INTEGRAL
+PERFORMANCE LAB v1.4.0 — AUDITORÍA INTEGRAL
 
-OBJETIVO
-Consolidar en una sola versión funcional las lecciones aprendidas del proceso previo y evitar regresiones entre importación, datos, sueño, diseño móvil, Zepp, check-ins y progreso de hipertrofia.
+Resultado: 43/43 comprobaciones PASS.
 
-CAMBIOS ESTRUCTURALES
-1. Resumen móvil rediseñado como tarjetas de ancho completo con dato principal + micrográfica contenida.
-2. Detalle por métrica con jerarquía similar a Apple Salud, sin copiar su interfaz: periodo, promedio/valor, rango, gráfica, último dato y tendencia.
-3. Sueño mantiene hipnograma y fases, sin controles visuales que no tengan función.
-4. Zepp integrado como capa de datos explícita: VFC/HRV, estrés, PAI, puntuación de sueño y recuperación/readiness.
-5. Check-ins subjetivos 1–5:
-   - Al despertar: calidad percibida de sueño, energía, fatiga, dolor muscular, estrés.
-   - Pre-entreno: energía, fatiga muscular, dolor/molestia, motivación, preparación percibida.
-   Los check-ins NO modifican los semáforos objetivos.
-6. Progreso de hipertrofia priorizado: sesiones realizadas, sesiones planificadas, objetivo semanal, adherencia sólo cuando hay datos reales de entrenamiento, peso y cambio vs basal.
-7. Migración de estado v1 -> v2 para conservar datos previos.
-8. Importación transaccional preservada: un paquete inválido no deja el estado a medias.
-9. Nombres históricos del Atajo preservados: sourse, PasosFechad, SpO2Fechad y fechas es-MX con coma.
-10. Importación Zepp admite nombres alternativos en español/inglés y entrada manual desde la app.
+Cambios auditados:
+- IMC semanal obligatorio para cerrar semáforo Salud en verde.
+- Composición corporal Zepp: peso, IMC, grasa corporal, músculo esquelético, masa muscular, agua, proteína, masa ósea y metabolismo basal.
+- Bloque de composición = 20% del semáforo Salud. Dentro del bloque: IMC 40%, grasa 35%, cintura/altura 25% cuando están disponibles.
+- Progreso de hipertrofia muestra IMC, grasa y músculo esquelético semanal, además de sus deltas.
+- BIA secundaria se muestra y traza, pero no domina el semáforo.
+- Compatibilidad preservada con Apple Salud legacy, sueño, portapapeles y check-ins.
 
-LECCIONES APRENDIDAS APLICADAS
-- No se reemplazan fragmentos mediante parches externos.
-- index.html sólo carga un app.js y un styles.css de la misma versión.
-- Se valida que funciones críticas preexistentes sigan presentes después de cada cambio.
-- Se distingue planificación de entrenamiento de entrenamiento realmente completado.
-- Datos faltantes no se inventan ni se convierten en cero.
-- HRV/VFC no se exige al contador Apple Salud si no está disponible allí.
-- Check-ins subjetivos se separan de los scores fisiológicos objetivos.
+Prueba runtime:
+PASS Apple legacy import count
+PASS steps sum
+PASS resting HR
+PASS Zepp anthro exists
+PASS Zepp BMI exact
+PASS Zepp body fat exact
+PASS Zepp skeletal muscle exact
+PASS Zepp muscle mass exact
+PASS Zepp water exact
+PASS Zepp protein exact
+PASS Zepp bone exact
+PASS Zepp BMR exact
+PASS vector BMI
+PASS vector body fat
+PASS vector skeletal muscle
+PASS health includes body composition
+PASS health score finite
+PASS missing BMI caps health
+PASS morning subjective score
+PASS sleep ligero alias
+PASS sleep profundo alias
+PASS sleep REM alias
+PASS sleep en cama alias
+PASS body panel BMI
+PASS body panel muscle
+PASS body panel BMR
+TOTAL 26
 
-PRUEBAS DE REGRESIÓN
-Resultado: 43/43 PASS.
 
-Cobertura probada:
-- Fecha es-MX no se divide por la coma de fecha/hora.
-- Pasos: suma diaria.
-- SpO2: mediana diaria.
-- FC en reposo: importación.
-- Frecuencia respiratoria: importación.
-- Sueño: 4 h 16 min de ejemplo auditado.
-- Tiempo en cama: 4 h 23 min.
-- Profundo: 48 min.
-- REM: 40 min.
-- Vigilia: 7 min.
-- Persistencia de segmentos de sueño.
-- Zepp: HRV, estrés, PAI, sleep score, readiness.
-- Check-in mañana: 5 variables.
-- Check-in pre-entreno: 5 variables.
-- Inversión correcta de escalas negativas en score subjetivo.
-- 10 tarjetas del resumen fisiológico/Zepp.
-- 2 check-ins visibles.
-- Bloque de hipertrofia visible.
-- Navegación preservada.
-- Modales Zepp y check-in completos.
-- Funciones de Salud, Entrenar, Progreso, Insights, Más, exportación y formularios preservadas.
-- CSS con prevención de overflow horizontal.
-- Gráficas detalladas y de sueño limitadas al contenedor.
-- index.html y assets con la misma versión.
-- Sin dependencia del antiguo health-import-patch.js.
-- manifest válido e iconos presentes.
-
-NOTA DE VALIDACIÓN VISUAL
-La auditoría automatizada valida estructura, datos y reglas de contención CSS. La prueba final de renderizado debe hacerse en el iPhone real porque Safari iOS/PWA tiene comportamiento propio de viewport y portapapeles. Si aparece una diferencia visual en el dispositivo, se considera un defecto de presentación; no debe resolverse cambiando el contrato de datos.
-
-ARCHIVOS DE PRODUCCIÓN
-index.html: 1185 bytes · sha256 dbf442f3949665aa
-app.js: 83032 bytes · sha256 481e053b2357443a
-styles.css: 25154 bytes · sha256 673d8f137bc9d97c
-manifest.webmanifest: 510 bytes · sha256 076af59019bc789f
-sw.js: 432 bytes · sha256 40953735574d7809
-icon-180.png: 1639 bytes · sha256 4d0498fd8e8a07a7
-icon-192.png: 1706 bytes · sha256 ccc673a300d784d9
-icon-512.png: 4440 bytes · sha256 3a8706153744d42b
-.nojekyll: 0 bytes · sha256 e3b0c44298fc1c14
+Comprobaciones:
+PASS — BUILD 1.4.0
+PASS — render function present
+PASS — scoreHealth unique
+PASS — anthroSummary unique
+PASS — Zepp modal unique
+PASS — BMI metric defined
+PASS — Body fat metric defined
+PASS — Skeletal muscle metric defined
+PASS — Body water metric defined
+PASS — Body protein metric defined
+PASS — Bone mass metric defined
+PASS — BMR metric defined
+PASS — Health body composition weight 20
+PASS — BMI weekly required for green
+PASS — Apple PasosFechad alias preserved
+PASS — Apple SpO2Fechad alias preserved
+PASS — sourse legacy preserved
+PASS — Manual paste import preserved
+PASS — Sleep import preserved
+PASS — Checkins preserved
+PASS — Index cache bust 1.4.0
+PASS — CSS brace balance
+PASS — Manifest JSON valid
+PASS — Required index.html
+PASS — Required app.js
+PASS — Required styles.css
+PASS — Required manifest.webmanifest
+PASS — Required sw.js
+PASS — Required icon-180.png
+PASS — Required icon-192.png
+PASS — Required icon-512.png
+PASS — JavaScript syntax valid
+PASS — Runtime regression harness exits 0
+PASS — 26 runtime assertions passed
+PASS — Sleep stage mapping regression passed
+PASS — Export imc
+PASS — Export grasa_corporal
+PASS — Export musculo_esqueletico
+PASS — Export masa_muscular
+PASS — Export agua_corporal
+PASS — Export proteina_corporal
+PASS — Export masa_osea
+PASS — Export bmr

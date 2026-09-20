@@ -10,11 +10,16 @@
   <meta name="description" content="Panel personal de salud, recuperación y entrenamiento." />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./icon-180.png" />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./styles.css?v=1.0.7" />
   <title>Performance Lab</title>
 </head>
 <body>
   <div id="app"></div>
-  <script type="module" src="./app.js"></script>
+  <script>
+    // Limpieza temprana de builds PWA anteriores.
+    if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(()=>{});
+    if ('caches' in window) caches.keys().then(ks => ks.filter(k => k.startsWith('performance-lab-')).forEach(k => caches.delete(k))).catch(()=>{});
+  </script>
+  <script type="module" src="./app.js?v=1.0.7"></script>
 </body>
 </html>

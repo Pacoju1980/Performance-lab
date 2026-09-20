@@ -1,0 +1,2 @@
+Performance Lab 1.0.7 RECOVERY
+Fecha local + parser de listas es-MX + limpieza de service worker antiguo.

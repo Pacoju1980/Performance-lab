@@ -112,3 +112,6 @@ main{padding:8px 16px 18px}.section-title{display:flex;justify-content:space-bet
  .sleep-axis-label{font-size:14px}
  .sleep-day-strip{gap:2px}
 }
+
+/* v1.1.0 · importación robusta iOS */
+.import-modal textarea{width:100%;min-height:220px;resize:vertical;border:1px solid #dfe5ec;background:#fff;border-radius:14px;padding:12px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);outline:none}.import-modal textarea:focus{border-color:#8bb0ff;box-shadow:0 0 0 3px rgba(54,120,255,.10)}

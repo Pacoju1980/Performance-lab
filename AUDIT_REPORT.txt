@@ -1,72 +1,73 @@
-PERFORMANCE LAB 1.1.0 — AUDITORÍA INTEGRAL
+PERFORMANCE LAB v1.2.0 — AUDITORÍA INTEGRAL
 
-Objetivo
--------
-Eliminar las regresiones repetitivas de importación, fecha, caché y sueño, y dejar una base única e integrada.
+OBJETIVO
+Consolidar en una sola versión funcional las lecciones aprendidas del proceso previo y evitar regresiones entre importación, datos, sueño, diseño móvil, Zepp, check-ins y progreso de hipertrofia.
 
-CAUSAS RAÍZ IDENTIFICADAS
--------------------------
-1. Versiones construidas como parches sucesivos.
-   Un cambio podía partir de una copia anterior y sobrescribir una corrección ya hecha.
-   Solución: 1.1.0 es un paquete completo; no depende de archivos-parche externos.
+CAMBIOS ESTRUCTURALES
+1. Resumen móvil rediseñado como tarjetas de ancho completo con dato principal + micrográfica contenida.
+2. Detalle por métrica con jerarquía similar a Apple Salud, sin copiar su interfaz: periodo, promedio/valor, rango, gráfica, último dato y tendencia.
+3. Sueño mantiene hipnograma y fases, sin controles visuales que no tengan función.
+4. Zepp integrado como capa de datos explícita: VFC/HRV, estrés, PAI, puntuación de sueño y recuperación/readiness.
+5. Check-ins subjetivos 1–5:
+   - Al despertar: calidad percibida de sueño, energía, fatiga, dolor muscular, estrés.
+   - Pre-entreno: energía, fatiga muscular, dolor/molestia, motivación, preparación percibida.
+   Los check-ins NO modifican los semáforos objetivos.
+6. Progreso de hipertrofia priorizado: sesiones realizadas, sesiones planificadas, objetivo semanal, adherencia sólo cuando hay datos reales de entrenamiento, peso y cambio vs basal.
+7. Migración de estado v1 -> v2 para conservar datos previos.
+8. Importación transaccional preservada: un paquete inválido no deja el estado a medias.
+9. Nombres históricos del Atajo preservados: sourse, PasosFechad, SpO2Fechad y fechas es-MX con coma.
+10. Importación Zepp admite nombres alternativos en español/inglés y entrada manual desde la app.
 
-2. El mismo mensaje mezclaba dos fallos distintos:
-   - iOS/Safari no permite leer el portapapeles.
-   - el texto no es JSON válido.
-   Solución: ahora se distinguen. Si iOS bloquea la lectura automática, la app abre una caja de pegado manual sin perder los datos.
+LECCIONES APRENDIDAS APLICADAS
+- No se reemplazan fragmentos mediante parches externos.
+- index.html sólo carga un app.js y un styles.css de la misma versión.
+- Se valida que funciones críticas preexistentes sigan presentes después de cada cambio.
+- Se distingue planificación de entrenamiento de entrenamiento realmente completado.
+- Datos faltantes no se inventan ni se convierten en cero.
+- HRV/VFC no se exige al contador Apple Salud si no está disponible allí.
+- Check-ins subjetivos se separan de los scores fisiológicos objetivos.
 
-3. El Atajo y la app no tenían un contrato estable de datos.
-   El Atajo entrega campos como PasosFechad, SpO2Fechad, sourse y listas separadas por salto de línea.
-   Solución: el importador reconoce explícitamente esas variantes y NO separa fechas por comas.
+PRUEBAS DE REGRESIÓN
+Resultado: 43/43 PASS.
 
-4. Fechas en UTC frente a fecha local.
-   Solución: toda la fecha diaria usa año/mes/día locales; no se usa toISOString() para decidir “hoy”.
+Cobertura probada:
+- Fecha es-MX no se divide por la coma de fecha/hora.
+- Pasos: suma diaria.
+- SpO2: mediana diaria.
+- FC en reposo: importación.
+- Frecuencia respiratoria: importación.
+- Sueño: 4 h 16 min de ejemplo auditado.
+- Tiempo en cama: 4 h 23 min.
+- Profundo: 48 min.
+- REM: 40 min.
+- Vigilia: 7 min.
+- Persistencia de segmentos de sueño.
+- Zepp: HRV, estrés, PAI, sleep score, readiness.
+- Check-in mañana: 5 variables.
+- Check-in pre-entreno: 5 variables.
+- Inversión correcta de escalas negativas en score subjetivo.
+- 10 tarjetas del resumen fisiológico/Zepp.
+- 2 check-ins visibles.
+- Bloque de hipertrofia visible.
+- Navegación preservada.
+- Modales Zepp y check-in completos.
+- Funciones de Salud, Entrenar, Progreso, Insights, Más, exportación y formularios preservadas.
+- CSS con prevención de overflow horizontal.
+- Gráficas detalladas y de sueño limitadas al contenedor.
+- index.html y assets con la misma versión.
+- Sin dependencia del antiguo health-import-patch.js.
+- manifest válido e iconos presentes.
 
-5. Caché/service worker podía servir una versión anterior.
-   Solución: el service worker queda neutro y se eliminan cachés Performance Lab durante la estabilización.
+NOTA DE VALIDACIÓN VISUAL
+La auditoría automatizada valida estructura, datos y reglas de contención CSS. La prueba final de renderizado debe hacerse en el iPhone real porque Safari iOS/PWA tiene comportamiento propio de viewport y portapapeles. Si aparece una diferencia visual en el dispositivo, se considera un defecto de presentación; no debe resolverse cambiando el contrato de datos.
 
-6. Sueño se calculaba parcialmente.
-   Solución: se reconocen Ligero, Profundo, REM, Durmiendo, Vigilia y En cama; se fusionan intervalos para evitar dobles conteos y se guardan las fases para el hipnograma.
-
-7. El contador de sincronización incluía métricas que Apple Salud no entrega actualmente.
-   Solución: cobertura automática = 5 métricas disponibles por el puente actual: sueño, FC en reposo, SpO2, pasos y respiración.
-
-8. No existía una prueba de regresión antes de entregar cada build.
-   Solución: se ejecutó una prueba con un payload representativo del formato real del Atajo.
-
-RESULTADOS DE AUDITORÍA
------------------------
-- app.js: sintaxis JavaScript válida con node --check.
-- index.html: referencias consistentes con v1.1.0.
-- manifest.webmanifest: JSON válido y todos los iconos existen.
-- iconos: dimensiones verificadas 180x180, 192x192 y 512x512.
-- styles.css: balance de bloques verificado.
-- sw.js: sin escritura de caché.
-- paquete: un solo app.js; no hay duplicados ambiguos.
-- 35 comprobaciones estructurales: 35/35 PASS.
-
-PRUEBA DE REGRESIÓN DEL IMPORTADOR
-----------------------------------
-Se usó un payload representativo del formato real ya observado:
-- sourse
-- PasosFechad
-- SpO2Fechad
-- fechas es-MX con coma y a.m./p.m.
-- sueño por intervalos y fases
-
-Resultado:
-- cobertura: 5/5
-- sueño de prueba: 4 h 16 min
-- tiempo en cama de prueba: 4 h 22 min
-- pasos: suma diaria correcta
-- SpO2: mediana diaria correcta
-- respiración: mediana diaria correcta
-- fases: persistidas para el hipnograma
-
-CAMBIO CLAVE DE ROBUSTEZ
-------------------------
-La importación es transaccional: si un paquete no puede interpretarse, el estado anterior se restaura. Un error de importación ya no debe dejar datos parcialmente modificados.
-
-IMPORTANTE PARA DESPLIEGUE
---------------------------
-Usar este paquete COMPLETO como una sola versión. No combinar app.js, index.html o styles.css de builds anteriores.
+ARCHIVOS DE PRODUCCIÓN
+index.html: 1185 bytes · sha256 dbf442f3949665aa
+app.js: 83032 bytes · sha256 481e053b2357443a
+styles.css: 25154 bytes · sha256 673d8f137bc9d97c
+manifest.webmanifest: 510 bytes · sha256 076af59019bc789f
+sw.js: 432 bytes · sha256 40953735574d7809
+icon-180.png: 1639 bytes · sha256 4d0498fd8e8a07a7
+icon-192.png: 1706 bytes · sha256 ccc673a300d784d9
+icon-512.png: 4440 bytes · sha256 3a8706153744d42b
+.nojekyll: 0 bytes · sha256 e3b0c44298fc1c14

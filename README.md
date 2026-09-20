@@ -1,24 +1,17 @@
-# Performance Lab 1.1.0 INTEGRAL
+# Performance Lab v1.2.0 INTEGRAL
 
-Esta versión sustituye el esquema de parches sucesivos.
+Versión consolidada para salud, recuperación e hipertrofia.
 
-Archivos de producción:
-- `.nojekyll`
-- `index.html`
-- `app.js`
-- `styles.css`
-- `manifest.webmanifest`
-- `sw.js`
-- `icon-180.png`
-- `icon-192.png`
-- `icon-512.png`
-- `VERSION.txt`
-
-`AUDIT_REPORT.txt` documenta causas raíz y pruebas.
+## Qué incluye
+- Resumen móvil tipo health dashboard, con tarjetas y micrográficas contenidas.
+- Apple Salud: sueño, FC en reposo, SpO₂, respiración y pasos.
+- Zepp: VFC/HRV, estrés, PAI, puntuación de sueño y recuperación/readiness.
+- Check-in subjetivo 1–5 al despertar y antes de entrenar.
+- Progreso de hipertrofia con adherencia, sesiones, antropometría y tendencias.
+- Importación robusta de JSON y pegado manual si iOS bloquea el portapapeles.
 
 ## Despliegue
-1. Conserva una copia de seguridad del repositorio actual.
-2. Sustituye los archivos de producción por los de este paquete.
-3. No mezcles archivos de 1.0.7, 1.0.8 o 1.0.9.
-4. Espera a que GitHub Pages termine el deploy.
-5. Abre la app y sincroniza. Si iOS bloquea el portapapeles, la app abrirá la caja “Pegar datos de Apple Salud”.
+Sustituir el contenido de la raíz del repositorio por los archivos de producción de este paquete como una sola versión. No mezclar con builds 1.0.x o 1.1.0.
+
+## Auditoría
+`AUDIT_REPORT.txt` documenta causas raíz, controles y resultado de 43/43 pruebas de regresión.

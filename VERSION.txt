@@ -1,2 +1,1 @@
-Performance Lab 1.1.0 INTEGRAL
-2026-09-19
+Performance Lab v1.2.0 INTEGRAL
